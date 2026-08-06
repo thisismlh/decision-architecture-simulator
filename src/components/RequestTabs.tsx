@@ -7,7 +7,6 @@ interface Props {
 }
 
 export default function RequestTabs({ requests, selected, onSelect }: Props) {
-  const current = requests.find((r) => r.id === selected);
   return (
     <div className="border-y border-wash">
       <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 py-3">
@@ -31,11 +30,6 @@ export default function RequestTabs({ requests, selected, onSelect }: Props) {
           );
         })}
       </div>
-      {current && (
-        <p className="border-t border-wash py-3 font-serif text-base italic text-ink/85">
-          &ldquo;{current.prompt}&rdquo;
-        </p>
-      )}
     </div>
   );
 }

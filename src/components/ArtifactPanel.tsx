@@ -124,7 +124,7 @@ export default function ArtifactPanel({ cell, cellId, revealed, onReveal }: Prop
               {block.meta && <span className="ml-auto font-mono text-xs text-slate-dim">{block.meta}</span>}
             </button>
             {open && (
-              <div className="flex flex-col gap-4 border-t border-wash px-5 py-4">
+              <div className="block-in flex flex-col gap-4 border-t border-wash px-5 py-4">
                 {block.body.map((b) => renderBlock(b, depth + 1))}
               </div>
             )}
@@ -145,7 +145,15 @@ export default function ArtifactPanel({ cell, cellId, revealed, onReveal }: Prop
 
       <div ref={bodyRef} className="bg-wash px-7 py-9 sm:px-12 sm:py-12">
         <div className="mx-auto flex max-w-[620px] flex-col gap-4">
-          {artifact.body.map((b) => renderBlock(b))}
+          {artifact.body.map((b, i) => (
+            <div
+              key={b.id}
+              className="block-in"
+              style={{ animationDelay: `${Math.min(i * 70, 700)}ms` }}
+            >
+              {renderBlock(b)}
+            </div>
+          ))}
         </div>
       </div>
 

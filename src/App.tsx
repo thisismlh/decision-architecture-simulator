@@ -3,8 +3,7 @@ import novelist from './content/novelist';
 import { cellKey, type Level } from './types';
 import RequestTabs from './components/RequestTabs';
 import LevelRail from './components/LevelRail';
-import ArtifactPanel from './components/ArtifactPanel';
-import FourBeats from './components/FourBeats';
+import Conversation from './components/Conversation';
 import Ledger from './components/Ledger';
 
 interface State {
@@ -101,16 +100,13 @@ export default function App() {
 
           <div className="min-w-0 pb-6">
             {cell ? (
-              <>
-                <ArtifactPanel
-                  key={id}
-                  cell={cell}
-                  cellId={id}
-                  revealed={state.revealed}
-                  onReveal={() => dispatch({ type: 'reveal' })}
-                />
-                <FourBeats cell={cell} />
-              </>
+              <Conversation
+                request={novelist.requests.find((r) => r.id === state.requestId)!}
+                cell={cell}
+                cellId={id}
+                revealed={state.revealed}
+                onReveal={() => dispatch({ type: 'reveal' })}
+              />
             ) : (
               <p className="text-sm text-slate-dim">No content for this cell yet.</p>
             )}
