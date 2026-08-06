@@ -21,6 +21,17 @@ const CAPTIONS: Record<Level, string> = {
 const INK = 'var(--color-slate)';
 const DIM = 'var(--color-slate-dim)';
 
+/* Per-level crop: each diagram gets only the vertical room its shape needs,
+   so a single call reads as a short strip and orchestration as a tall one. */
+const VIEWBOX: Record<Level, string> = {
+  1: '0 44 640 62',
+  3: '0 42 640 90',
+  4: '0 42 640 88',
+  5: '0 38 640 100',
+  6: '0 0 640 154',
+  7: '0 0 640 146',
+};
+
 function Node({
   x,
   y,
@@ -156,7 +167,10 @@ function DiagramL3({ t }: DiagramProps) {
   const journey = 'M 60 75 H 520 C 546 75, 546 90, 520 98 C 520 124, 92 124, 64 86';
   return (
     <>
-      <path d="M 90 75 H 552" fill="none" stroke={DIM} strokeWidth={1} />
+      <Wire d="M 90 75 H 112" />
+      <Wire d="M 182 75 H 236" />
+      <Wire d="M 306 75 H 360" />
+      <Wire d="M 430 75 H 484" />
       <Wire d="M 524 90 C 524 122, 88 122, 60 90" dashed />
       <Mark path={journey} dur={5.5} keyPoints="0;1;1" keyTimes="0;0.9;1" />
       <Node x={30} y={62} w={58} label="you" />
@@ -200,23 +214,14 @@ function DiagramL4({ t }: DiagramProps) {
 
 /* L5 — one mark: out, around the loop twice, home. */
 function DiagramL5({ t }: DiagramProps) {
-  const loopOnce =
-    'H 462 C 478 68, 478 84, 462 84 H 300 L 300 68 ';
+  const loopOnce = 'L 300 66 H 466 L 466 84 H 304 ';
   const journey =
-    'M 60 70 H 300 L 300 68 ' +
-    loopOnce +
-    loopOnce.replace('L 300 68 ', 'L 300 86 ') +
-    'C 240 124, 90 120, 66 86';
+    'M 60 70 H 300 ' + loopOnce + loopOnce + 'L 304 86 C 240 124, 90 120, 66 86';
   return (
     <>
       <Wire d="M 92 70 H 246" />
-      <path
-        d="M 326 68 H 462 C 478 68, 478 84, 462 84 H 330 C 316 84, 316 68, 326 68"
-        fill="none"
-        stroke={DIM}
-        strokeWidth={1}
-        markerEnd="url(#flow-arr)"
-      />
+      <Wire d="M 326 66 H 430" />
+      <Wire d="M 430 84 H 326" />
       <Wire d="M 276 92 C 240 124, 90 120, 66 88" dashed />
       <Mark path={journey} dur={7} keyPoints="0;1;1" keyTimes="0;0.93;1" />
       <Node x={30} y={62} w={58} label="you" />
@@ -237,11 +242,12 @@ function DiagramL6({ t }: DiagramProps) {
   return (
     <>
       {rows.map((y, i) => {
-        const wire = `M 90 75 C 160 75, 160 ${y + 13}, 226 ${y + 13} H 322 C 396 ${y + 13}, 396 75, 462 75`;
-        const lane = `M 60 75 C 160 75, 160 ${y + 13}, 226 ${y + 13} H 322 C 396 ${y + 13}, 396 75, 480 75`;
+        const mid = y + 13;
+        const lane = `M 60 75 C 160 75, 160 ${mid}, 226 ${mid} H 322 C 396 ${mid}, 396 75, 480 75`;
         return (
           <g key={y}>
-            <path d={wire} fill="none" stroke={DIM} strokeWidth={1} />
+            <Wire d={`M 90 75 C 160 75, 160 ${mid}, 222 ${mid}`} />
+            <Wire d={`M 322 ${mid} C 396 ${mid}, 396 75, 460 75`} />
             <Mark
               path={lane}
               dur={4.5}
@@ -277,10 +283,12 @@ function DiagramL7({ t }: DiagramProps) {
     <>
       <Wire d="M 92 70 H 216" />
       {rows.map((y, i) => {
-        const outWire = `M 322 70 C 392 70, 392 ${y + 9}, 452 ${y + 9}`;
-        const backWire = `M 452 ${y + 17} C 392 ${y + 17}, 392 82, 322 82`;
-        const outLane = `M 300 70 C 392 70, 392 ${y + 9}, 470 ${y + 9}`;
-        const backLane = `M 470 ${y + 17} C 392 ${y + 17}, 392 82, 300 82`;
+        const leave = 66 + i * 4;
+        const arrive = 78 + i * 4;
+        const outWire = `M 322 ${leave} C 392 ${leave}, 392 ${y + 9}, 448 ${y + 9}`;
+        const backWire = `M 452 ${y + 17} C 392 ${y + 17}, 392 ${arrive}, 326 ${arrive}`;
+        const outLane = `M 300 ${leave} C 392 ${leave}, 392 ${y + 9}, 470 ${y + 9}`;
+        const backLane = `M 470 ${y + 17} C 392 ${y + 17}, 392 ${arrive}, 300 ${arrive}`;
         const s = 0.16 + i * 0.2;
         return (
           <g key={y}>
@@ -345,7 +353,7 @@ export default function FlowDiagram({ level, telemetry }: { level: Level; teleme
         </span>
       </figcaption>
       <svg
-        viewBox="0 0 640 150"
+        viewBox={VIEWBOX[level]}
         role="img"
         aria-label={`Call structure for level ${level}: ${CAPTIONS[level]}`}
         className="mt-1 block w-full max-w-[680px]"
