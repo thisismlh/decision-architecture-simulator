@@ -78,7 +78,7 @@ export default function Conversation({ request, cell, cellId, revealed, onReveal
         </p>
       </div>
 
-      <FlowDiagram level={cell.level} />
+      <FlowDiagram level={cell.level} telemetry={cell.telemetry} />
 
       {phase === 'delivered' ? (
         <div className="block-in">
