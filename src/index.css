@@ -1,0 +1,82 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-*: initial;
+  --color-bone: #f2f3f0;
+  --color-ink: #111418;
+  --color-slate: #2a3b4d;
+  --color-slate-dim: #7a8087;
+  --color-pine: #1e6b5a;
+  --color-signal: #b4243d;
+  --color-wash: #e7e9e4;
+  --color-white: #ffffff;
+
+  --font-serif: 'Newsreader', georgia, serif;
+  --font-sans: 'Inter Tight', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --text-xs: 13px;
+  --text-sm: 15px;
+  --text-base: 18px;
+  --text-lg: 24px;
+  --text-xl: 34px;
+}
+
+html {
+  background: var(--color-bone);
+}
+
+body {
+  margin: 0;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-serif {
+  font-optical-sizing: auto;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-slate);
+  outline-offset: 2px;
+}
+
+/* Token swarm marks */
+@keyframes mark-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.mark {
+  width: 2px;
+  height: 2px;
+  flex: none;
+}
+
+.mark-animate {
+  opacity: 0;
+  animation: mark-in 100ms linear forwards;
+}
+
+.defect-hit {
+  box-shadow: inset 3px 0 0 0 var(--color-signal);
+  background: color-mix(in srgb, var(--color-signal) 6%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mark-animate {
+    opacity: 1;
+    animation: none;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
