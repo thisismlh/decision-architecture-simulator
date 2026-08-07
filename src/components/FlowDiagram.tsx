@@ -72,7 +72,17 @@ function Node({
   );
 }
 
-function Wire({ d, dashed = false, arrow = true }: { d: string; dashed?: boolean; arrow?: boolean }) {
+function Wire({
+  d,
+  dashed = false,
+  arrow = true,
+  both = false,
+}: {
+  d: string;
+  dashed?: boolean;
+  arrow?: boolean;
+  both?: boolean;
+}) {
   return (
     <path
       d={d}
@@ -81,6 +91,7 @@ function Wire({ d, dashed = false, arrow = true }: { d: string; dashed?: boolean
       strokeWidth={1}
       strokeDasharray={dashed ? '3 3' : undefined}
       markerEnd={arrow ? 'url(#flow-arr)' : undefined}
+      markerStart={both ? 'url(#flow-arr)' : undefined}
     />
   );
 }
@@ -287,17 +298,14 @@ function DiagramL7({ t }: DiagramProps) {
     <>
       <Wire d="M 92 70 H 216" />
       {rows.map((y, i) => {
-        const leave = 66 + i * 4;
-        const arrive = 78 + i * 4;
-        const outWire = `M 322 ${leave} C 392 ${leave}, 392 ${y + 9}, 448 ${y + 9}`;
-        const backWire = `M 452 ${y + 17} C 392 ${y + 17}, 392 ${arrive}, 326 ${arrive}`;
-        const outLane = `M 300 ${leave} C 392 ${leave}, 392 ${y + 9}, 470 ${y + 9}`;
-        const backLane = `M 470 ${y + 17} C 392 ${y + 17}, 392 ${arrive}, 300 ${arrive}`;
+        const sy = 69 + i * 6;
+        const mid = y + 13;
+        const outLane = `M 300 ${sy} C 392 ${sy}, 392 ${mid}, 470 ${mid}`;
+        const backLane = `M 470 ${mid} C 392 ${mid}, 392 ${sy}, 300 ${sy}`;
         const s = 0.16 + i * 0.2;
         return (
           <g key={y}>
-            <Wire d={outWire} />
-            <Wire d={backWire} />
+            <Wire d={`M 328 ${sy} C 392 ${sy}, 392 ${mid}, 446 ${mid}`} both />
             <Mark
               path={outLane}
               dur={7}
