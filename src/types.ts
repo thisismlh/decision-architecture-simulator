@@ -49,6 +49,8 @@ export interface Cell {
   artifact: Artifact;
   telemetry: Telemetry;
   defect?: Defect;
+  /** Level 4 only: whether the single tool pass reads or writes. Default 'write'. */
+  toolMode?: 'read' | 'write';
 }
 
 export interface RequestMeta {

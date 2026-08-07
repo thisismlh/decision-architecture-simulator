@@ -146,6 +146,7 @@ function TokenLabel({
 
 interface DiagramProps {
   t: Telemetry;
+  toolMode?: 'read' | 'write';
 }
 
 const total = (t: Telemetry) => t.tokensIn + t.tokensOut;
@@ -196,8 +197,36 @@ function DiagramL3({ t }: DiagramProps) {
   );
 }
 
-/* L4 — the work ends up in the files; only a receipt comes back. */
-function DiagramL4({ t }: DiagramProps) {
+/* L4 — one tool pass. Write mode: the work ends up in the files and only a
+   receipt comes back. Read mode: one round trip to the files — query out,
+   content back — and never a second look. */
+function DiagramL4({ t, toolMode }: DiagramProps) {
+  if (toolMode === 'read') {
+    return (
+      <>
+        <Wire d="M 92 68 H 226" />
+        <Wire d="M 306 68 H 460" both />
+        <Wire d="M 266 92 C 230 122, 90 118, 62 90" dashed />
+        <Mark
+          path="M 60 68 H 266 H 500 H 266"
+          dur={4.5}
+          keyPoints="0;0.31;0.31;0.65;0.65;1;1"
+          keyTimes="0;0.14;0.24;0.36;0.54;0.68;1"
+        />
+        <Mark
+          path="M 266 84 L 266 92 C 230 122, 90 118, 62 90 L 66 86"
+          dur={4.5}
+          keyPoints="0;0;1;1"
+          keyTimes="0;0.78;0.94;1"
+        />
+        <TokenLabel x={266} y={54} text={`≈${perCall(t)} tok/call`} />
+        <TokenLabel x={509} y={54} text={`≈${formatTokens(t.tokensIn)} tok read`} />
+        <Node x={30} y={62} w={58} label="you" />
+        <Node x={230} y={62} w={72} label="model" />
+        <Node x={464} y={62} w={90} label="files/" dashed />
+      </>
+    );
+  }
   return (
     <>
       <Wire d="M 92 68 H 226" />
@@ -350,8 +379,20 @@ const DIAGRAMS: Record<Level, (p: DiagramProps) => React.ReactNode> = {
   7: DiagramL7,
 };
 
-export default function FlowDiagram({ level, telemetry }: { level: Level; telemetry: Telemetry }) {
+export default function FlowDiagram({
+  level,
+  telemetry,
+  toolMode,
+}: {
+  level: Level;
+  telemetry: Telemetry;
+  toolMode?: 'read' | 'write';
+}) {
   const Diagram = DIAGRAMS[level];
+  const caption =
+    level === 4 && toolMode === 'read'
+      ? 'one search pass through the files; nothing asks what the search missed'
+      : CAPTIONS[level];
   return (
     <figure className="m-0 border border-wash bg-wash/40 px-4 pb-3 pt-3">
       <figcaption className="flex items-baseline justify-between gap-4">
@@ -366,7 +407,7 @@ export default function FlowDiagram({ level, telemetry }: { level: Level; teleme
       <svg
         viewBox={VIEWBOX[level]}
         role="img"
-        aria-label={`Call structure for level ${level}: ${CAPTIONS[level]}`}
+        aria-label={`Call structure for level ${level}: ${caption}`}
         className="mt-1 block w-full max-w-[680px]"
       >
         <defs>
@@ -382,9 +423,9 @@ export default function FlowDiagram({ level, telemetry }: { level: Level; teleme
             <path d="M 0 0 L 8 4 L 0 8 z" fill={DIM} />
           </marker>
         </defs>
-        <Diagram t={telemetry} />
+        <Diagram t={telemetry} toolMode={toolMode} />
       </svg>
-      <p className="mt-1 font-mono text-xs text-slate-dim">{CAPTIONS[level]}</p>
+      <p className="mt-1 font-mono text-xs text-slate-dim">{caption}</p>
     </figure>
   );
 }

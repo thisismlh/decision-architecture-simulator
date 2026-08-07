@@ -4,6 +4,7 @@ const cell: Cell = {
   requestId: 'audit',
   level: 4,
   fit: 'workable',
+  toolMode: 'read',
   whatTheUserDid: 'Pointed the assistant at the manuscript folder and asked for every continuity error.',
   whatTheSystemDid: 'Gave the model a search tool over the forty chapter files and let it act once.',
   whatTheModelDid: 'Grepped the character and place names, read each set of matching passages once, and reported without a second pass.',
