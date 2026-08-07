@@ -14,7 +14,7 @@ const CAPTIONS: Record<Level, string> = {
   3: 'the graph is drawn before the run; the model fills boxes, never draws arrows',
   4: 'one pass out through tools; nothing comes back to check',
   5: 'each reply decides the next step; the loop runs until the model is satisfied',
-  6: 'branches share a brief, then run blind to each other until the merge',
+  6: 'one call writes the brief, code does the split; branches run blind until the merge',
   7: 'a model draws the arrows for the other models',
 };
 
@@ -238,39 +238,43 @@ function DiagramL5({ t }: DiagramProps) {
 /* L6 — the brief fans out, branches run blind, everything meets at merge. */
 function DiagramL6({ t }: DiagramProps) {
   const rows = [8, 42, 76, 110];
-  const branchTok = formatTokens(Math.round(total(t) * 0.22));
+  const branchTok = formatTokens(Math.round(total(t) * 0.2));
   return (
     <>
+      <Wire d="M 92 75 H 116" />
       {rows.map((y, i) => {
         const mid = y + 13;
-        const lane = `M 60 75 C 160 75, 160 ${mid}, 226 ${mid} H 322 C 396 ${mid}, 396 75, 480 75`;
+        const lane = `M 150 75 C 235 75, 235 ${mid}, 296 ${mid} H 384 C 435 ${mid}, 435 75, 494 75`;
         return (
           <g key={y}>
-            <Wire d={`M 90 75 C 160 75, 160 ${mid}, 222 ${mid}`} />
-            <Wire d={`M 322 ${mid} C 396 ${mid}, 396 75, 460 75`} />
+            <Wire d={`M 188 75 C 235 75, 235 ${mid}, 292 ${mid}`} />
+            <Wire d={`M 384 ${mid} C 435 ${mid}, 435 75, 464 75`} />
             <Mark
               path={lane}
-              dur={4.5}
+              dur={5}
               keyPoints="0;0;1;1"
-              keyTimes={`0;${0.04 + i * 0.02};${0.5 + i * 0.02};1`}
+              keyTimes={`0;${(0.18 + i * 0.02).toFixed(2)};${(0.58 + i * 0.02).toFixed(2)};1`}
             />
           </g>
         );
       })}
-      <Wire d="M 496 92 C 470 130, 92 128, 62 92" dashed />
+      <Wire d="M 500 92 C 480 130, 92 128, 62 92" dashed />
+      <Mark path="M 60 75 H 160" dur={5} keyPoints="0;1;1" keyTimes="0;0.1;1" />
       <Mark
-        path="M 490 84 C 470 130, 92 128, 66 86"
-        dur={4.5}
+        path="M 496 84 C 480 130, 92 128, 66 86"
+        dur={5}
         keyPoints="0;0;1;1"
-        keyTimes="0;0.72;0.92;1"
+        keyTimes="0;0.76;0.94;1"
       />
       <Node x={32} y={62} w={58} label="you" />
+      <Node x={120} y={62} w={64} label="brief" />
       {rows.map((y, i) => (
-        <Node key={y} x={228} y={y} w={92} label={`model ${String.fromCharCode(97 + i)}`} />
+        <Node key={y} x={296} y={y} w={84} label={`model ${String.fromCharCode(97 + i)}`} />
       ))}
-      <Node x={466} y={62} w={64} label="merge" />
-      <TokenLabel x={498} y={54} text={`≈${formatTokens(Math.round(total(t) * 0.12))} tok`} />
-      <TokenLabel x={274} y={149} text={`4 branches · ≈${branchTok} tok each`} />
+      <Node x={468} y={62} w={64} label="merge" />
+      <TokenLabel x={152} y={54} text={`≈${formatTokens(Math.round(total(t) * 0.08))} tok`} />
+      <TokenLabel x={500} y={54} text={`≈${formatTokens(Math.round(total(t) * 0.12))} tok`} />
+      <TokenLabel x={338} y={149} text={`4 branches · ≈${branchTok} tok each`} />
     </>
   );
 }
