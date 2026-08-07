@@ -305,24 +305,28 @@ function DiagramL7({ t }: DiagramProps) {
         return <Wire key={y} d={`M 328 ${sy} C 392 ${sy}, 392 ${mid}, 446 ${mid}`} both />;
       })}
       <Wire d="M 258 94 C 220 126, 92 122, 62 92" dashed />
-      {/* One continuous journey, L5-style: out to each worker and back twice,
-          riding the double-ended wires exactly, then home on the return wire. */}
+      {/* L6-style staggered starts: each worker's mark shuttles out and back
+          twice along its wire, all three overlapping in flight. */}
+      <Mark path="M 60 70 H 300" dur={8} keyPoints="0;1;1" keyTimes="0;0.1;1" />
+      {rows.map((y, i) => {
+        const sy = 69 + i * 6;
+        const mid = y + 13;
+        const trip = `L 328 ${sy} C 392 ${sy}, 392 ${mid}, 446 ${mid} L 470 ${mid} L 446 ${mid} C 392 ${mid}, 392 ${sy}, 328 ${sy} L 300 ${sy} `;
+        return (
+          <Mark
+            key={y}
+            path={`M 300 ${sy} ${trip}${trip}`}
+            dur={8}
+            keyPoints="0;0;1;1"
+            keyTimes={`0;${(0.16 + i * 0.03).toFixed(2)};${(0.68 + i * 0.03).toFixed(2)};1`}
+          />
+        );
+      })}
       <Mark
-        path={
-          'M 60 70 H 300 ' +
-          rows
-            .map((y, i) => {
-              const sy = 69 + i * 6;
-              const mid = y + 13;
-              const trip = `L 300 ${sy} L 328 ${sy} C 392 ${sy}, 392 ${mid}, 446 ${mid} L 470 ${mid} L 446 ${mid} C 392 ${mid}, 392 ${sy}, 328 ${sy} L 300 ${sy} `;
-              return trip + trip;
-            })
-            .join('') +
-          'L 262 88 L 258 94 C 220 126, 92 122, 62 92 L 66 86'
-        }
-        dur={11}
-        keyPoints="0;1;1"
-        keyTimes="0;0.95;1"
+        path="M 262 88 L 258 94 C 220 126, 92 122, 62 92 L 66 86"
+        dur={8}
+        keyPoints="0;0;1;1"
+        keyTimes="0;0.82;0.96;1"
       />
       <Node x={30} y={62} w={58} label="you" />
       <Node x={220} y={62} w={102} label="orchestrator" />
