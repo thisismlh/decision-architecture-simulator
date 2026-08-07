@@ -35,7 +35,7 @@ const VIEWBOX: Record<Level, string> = {
   3: '0 42 640 90',
   4: '0 42 640 88',
   5: '0 38 640 100',
-  6: '0 0 640 154',
+  6: '0 0 640 174',
   7: '0 0 640 146',
 };
 
@@ -307,10 +307,10 @@ function DiagramL6({ t }: DiagramProps) {
           </g>
         );
       })}
-      <Wire d="M 500 92 C 480 130, 92 128, 62 92" dashed />
+      <Wire d="M 500 92 C 486 190, 98 184, 62 92" dashed />
       <Mark path="M 60 75 H 160" dur={5} keyPoints="0;1;1" keyTimes="0;0.1;1" />
       <Mark
-        path="M 500 84 L 500 92 C 480 130, 92 128, 62 92 L 66 86"
+        path="M 500 84 L 500 92 C 486 190, 98 184, 62 92 L 66 86"
         dur={5}
         keyPoints="0;0;1;1"
         keyTimes="0;0.76;0.94;1"
