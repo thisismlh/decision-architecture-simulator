@@ -7,6 +7,13 @@ import { formatTokens } from '../lib/format';
  * cycle: a single mark (the work) leaves you, moves through the machinery,
  * and comes home — dwelling under a box means that stage is thinking.
  * Token figures are approximations derived from the cell's real telemetry.
+ *
+ * Visual grammar (every diagram must obey it):
+ * - solid box = an actor; dashed box = a thing that holds content
+ * - solid line = working handoff; dashed line = the deliverable returning to you
+ * - one arrowhead = happens once, one way; two arrowheads = a conversation
+ * - curvature carries no meaning — only stroke, arrowheads, and endpoints do
+ * - the mark is the work; marks ride wire paths verbatim (connectors hide in boxes)
  */
 
 const CAPTIONS: Record<Level, string> = {
@@ -158,7 +165,7 @@ function DiagramL1({ t }: DiagramProps) {
   return (
     <>
       <Wire d="M 92 68 H 532" />
-      <Wire d="M 536 82 H 96" />
+      <Wire d="M 536 82 H 96" dashed />
       <Mark
         path={journey}
         dur={4}

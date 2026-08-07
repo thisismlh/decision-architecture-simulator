@@ -231,24 +231,31 @@ p, li { font-size: 14px; color: var(--color-ink); } ul { padding-left: 18px; mar
 .rule { font-family: var(--font-mono); font-size: 13px; color: var(--color-slate-dim); }`,
   body: `
 <p class="rule">Decision Architecture Simulator — motion language. Everything animated must argue the thesis: cost is not proportional to value, and failures are silent.</p>
-<h2>1 · One journey per cycle (call graphs)</h2>
+<h2>1 · Line grammar (call graphs)</h2>
+<ul>
+<li>Solid box = an actor (you, model, orchestrator, merge, brief). Dashed box = a thing that holds content but doesn't act (files/, draft).</li>
+<li>Solid line = a working handoff. Dashed line = the deliverable returning to <em>you</em> — the moment the work becomes yours again.</li>
+<li>One arrowhead = it happens once, one direction. Two arrowheads = a conversation. This alone separates L6 from L7, and write-L4 from read-L4.</li>
+<li>Curvature carries no meaning. Straight vs curved is routing; meaning lives only in stroke, arrowheads, and endpoints.</li>
+</ul>
+<h2>2 · One journey per cycle (call graphs)</h2>
 <ul>
 <li>A single mark is "the work". It leaves <em>you</em>, dwells hidden under a node while that stage thinks, and returns on the dashed wire. Dwell = computation; travel = handoff.</li>
 <li>Levels differ only in who draws the arrows: L1 has none to draw, L3's are drawn before the run, L5's are drawn by each reply, L6 splits the mark, L7 delegates the drawing.</li>
 <li>L4's mark stays in files/ — only a receipt returns. Never animate a return from files; the whole point is nothing re-read them.</li>
 <li>Marks are 2.6px circles in slate. Wires 1px slate-dim; returns dashed. No easing curves — linear keyPoints choreography with holds.</li>
 </ul>
-<h2>2 · The swarm wave</h2>
+<h2>3 · The swarm wave</h2>
 <ul>
 <li>One mark ≈ N tokens, scale set per request so the densest level fills the rail. 4ms stagger, 600ms cap, bottom-up fill.</li>
 <li>Color encodes cost tier only. Signal red = top tier. Never selection, never quality.</li>
 </ul>
-<h2>3 · Chat rhythm</h2>
+<h2>4 · Chat rhythm</h2>
 <ul>
 <li>Prompt types at 16ms/char with a block caret; response blocks rise 6px over 260ms with 70ms stagger.</li>
 <li>Level switches inside a request skip the retype — the reader is comparing machinery, not re-asking.</li>
 </ul>
-<h2>4 · Restraint</h2>
+<h2>5 · Restraint</h2>
 <ul>
 <li>prefers-reduced-motion kills every animation, instantly complete, nothing lost but the choreography.</li>
 <li>No parallax, no springs, no bounce. This is a lab bench with a novel on it; the only drama allowed is the data's.</li>
