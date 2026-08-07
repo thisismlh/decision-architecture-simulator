@@ -175,7 +175,8 @@ function DiagramL1({ t }: DiagramProps) {
 /* L3 — one mark through the whole chain, then home. */
 function DiagramL3({ t }: DiagramProps) {
   const xs = [116, 240, 364, 488];
-  const journey = 'M 60 75 H 520 C 546 75, 546 90, 520 98 C 520 124, 92 124, 64 86';
+  // Rides the chain at y75, drops inside model 4, then follows the return wire exactly.
+  const journey = 'M 60 75 H 520 L 524 75 L 524 90 C 524 122, 88 122, 60 90 L 64 86';
   return (
     <>
       <Wire d="M 90 75 H 112" />
@@ -209,7 +210,7 @@ function DiagramL4({ t }: DiagramProps) {
         keyTimes="0;0.22;0.45;0.68;1"
       />
       <Mark
-        path="M 266 84 C 232 124, 90 118, 66 86"
+        path="M 266 84 L 266 92 C 230 122, 90 118, 62 90 L 66 86"
         dur={4.5}
         keyPoints="0;0;1;1"
         keyTimes="0;0.72;0.92;1"
@@ -227,7 +228,7 @@ function DiagramL4({ t }: DiagramProps) {
 function DiagramL5({ t }: DiagramProps) {
   const loopOnce = 'L 300 66 H 466 L 466 84 H 304 ';
   const journey =
-    'M 60 70 H 300 ' + loopOnce + loopOnce + 'L 304 86 C 240 124, 90 120, 66 86';
+    'M 60 70 H 300 ' + loopOnce + loopOnce + 'L 276 84 L 276 92 C 240 124, 90 120, 66 88';
   return (
     <>
       <Wire d="M 92 70 H 246" />
@@ -255,7 +256,8 @@ function DiagramL6({ t }: DiagramProps) {
       <Wire d="M 92 75 H 116" />
       {rows.map((y, i) => {
         const mid = y + 13;
-        const lane = `M 150 75 C 235 75, 235 ${mid}, 296 ${mid} H 384 C 435 ${mid}, 435 75, 494 75`;
+        // Straight hidden lead-ins/outs; the curved spans reuse the wire paths verbatim.
+        const lane = `M 150 75 L 188 75 C 235 75, 235 ${mid}, 292 ${mid} L 296 ${mid} H 384 C 435 ${mid}, 435 75, 464 75 L 494 75`;
         return (
           <g key={y}>
             <Wire d={`M 188 75 C 235 75, 235 ${mid}, 292 ${mid}`} />
@@ -272,7 +274,7 @@ function DiagramL6({ t }: DiagramProps) {
       <Wire d="M 500 92 C 480 130, 92 128, 62 92" dashed />
       <Mark path="M 60 75 H 160" dur={5} keyPoints="0;1;1" keyTimes="0;0.1;1" />
       <Mark
-        path="M 496 84 C 480 130, 92 128, 66 86"
+        path="M 500 84 L 500 92 C 480 130, 92 128, 62 92 L 66 86"
         dur={5}
         keyPoints="0;0;1;1"
         keyTimes="0;0.76;0.94;1"
@@ -300,34 +302,27 @@ function DiagramL7({ t }: DiagramProps) {
       {rows.map((y, i) => {
         const sy = 69 + i * 6;
         const mid = y + 13;
-        const outLane = `M 300 ${sy} C 392 ${sy}, 392 ${mid}, 470 ${mid}`;
-        const backLane = `M 470 ${mid} C 392 ${mid}, 392 ${sy}, 300 ${sy}`;
-        const s = 0.16 + i * 0.2;
-        return (
-          <g key={y}>
-            <Wire d={`M 328 ${sy} C 392 ${sy}, 392 ${mid}, 446 ${mid}`} both />
-            <Mark
-              path={outLane}
-              dur={7}
-              keyPoints="0;0;1;1"
-              keyTimes={`0;${s.toFixed(2)};${(s + 0.07).toFixed(2)};1`}
-            />
-            <Mark
-              path={backLane}
-              dur={7}
-              keyPoints="0;0;1;1"
-              keyTimes={`0;${(s + 0.1).toFixed(2)};${(s + 0.17).toFixed(2)};1`}
-            />
-          </g>
-        );
+        return <Wire key={y} d={`M 328 ${sy} C 392 ${sy}, 392 ${mid}, 446 ${mid}`} both />;
       })}
       <Wire d="M 258 94 C 220 126, 92 122, 62 92" dashed />
-      <Mark path="M 60 70 H 270" dur={7} keyPoints="0;1;1" keyTimes="0;0.1;1" />
+      {/* One continuous journey, L5-style: out to each worker and back twice,
+          riding the double-ended wires exactly, then home on the return wire. */}
       <Mark
-        path="M 262 86 C 220 126, 92 122, 66 86"
-        dur={7}
-        keyPoints="0;0;1;1"
-        keyTimes="0;0.84;0.95;1"
+        path={
+          'M 60 70 H 300 ' +
+          rows
+            .map((y, i) => {
+              const sy = 69 + i * 6;
+              const mid = y + 13;
+              const trip = `L 300 ${sy} L 328 ${sy} C 392 ${sy}, 392 ${mid}, 446 ${mid} L 470 ${mid} L 446 ${mid} C 392 ${mid}, 392 ${sy}, 328 ${sy} L 300 ${sy} `;
+              return trip + trip;
+            })
+            .join('') +
+          'L 262 88 L 258 94 C 220 126, 92 122, 62 92 L 66 86'
+        }
+        dur={11}
+        keyPoints="0;1;1"
+        keyTimes="0;0.95;1"
       />
       <Node x={30} y={62} w={58} label="you" />
       <Node x={220} y={62} w={102} label="orchestrator" />
